@@ -3,20 +3,14 @@
 	tls "/data/certs/local.cert.pem" "/data/certs/local.key.pem"
 }
 
-# host->container for the frontend webapp
-dev.core.local {
+# host->container for the webapp
+app.core.local {
 	import ssl_certs
-	reverse_proxy magento:80
+	reverse_proxy host.docker.internal:44324
 }
 
-# host->container for the graphql endpoint
-devql.core.local {
+# host->container for the whoami app
+test.core.local {
 	import ssl_certs
-	reverse_proxy graphql:80
-}
-
-# host->container for the database endpoint
-db.core.local {
-	import ssl_certs
-	reverse_proxy database:3306
+	reverse_proxy test:80
 }

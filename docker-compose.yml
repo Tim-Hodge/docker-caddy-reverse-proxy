@@ -7,43 +7,27 @@ services:
         image: caddy/caddy:2-alpine
         container_name: reverse-proxy
         restart: unless-stopped
+        # network_mode: "host"
         ports:
-            - "80:80"
-            - "443:443"
+          - "80:80"
+          - "443:443"
         volumes:
-        - caddy_data:/data
-        - caddy_config:/config
-        - $PWD/Caddyfile:/etc/caddy/Caddyfile
-        - $PWD/certs:/data/certs
+          - caddy_data:/data
+          - caddy_config:/config
+          - $PWD/Caddyfile:/etc/caddy/Caddyfile
+          - $PWD/certs:/data/certs
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
 
     # All Other Containers -- For Demo Purposes
-    database:
-      image: mysql:8.0
-      container_name: database
-      restart: always
-      ports:
-        - "3306:3306"
-      volumes:
-        - db:/var/lib/mysql
-      environment:
-        - MYSQL_ROOT_PASSWORD=root
 
-    magento:
+    test:
       image: containous/whoami:latest
-      container_name: magento
+      container_name: test
       restart: unless-stopped
       environment:
         WHOAMI_NAME: fake-app
 
-    graphql:
-      image: containous/whoami:latest
-      container_name: graphql
-      restart: unless-stopped
-      environment:
-        WHOAMI_NAME: fake-graphql
-
 volumes:
   caddy_data:
   caddy_config:
-  db:
-    driver: local
